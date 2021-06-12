@@ -138,14 +138,16 @@ def play_a_game():
 		win_check = check_for_winner()
 		if win_check == 1:
 			game_done = True
-		if win_check == 2: 
+		elif win_check == 2: 
 			board[x_move] = " B "
 			board[o_move] = " B "
 			full_board()
-		if not(bomb_test or (win_check == 1) or (win_check == 2)):
+		elif not(bomb_test or (win_check == 1) or (win_check == 2)):
 			for i, j in board.items():
 				if j == " B ":
 					board[i] = "   "
+			full_board()
+		else:
 			full_board()
 		print_board()
 	
