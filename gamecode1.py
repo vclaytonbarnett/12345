@@ -1,62 +1,165 @@
-print("Hello, and welcome to 12345. This is similar to a game of tic-tac-toe. You will play on a five by five board. Each spot on the\
- board is mapped by a number. The top left corner is 1. The top row from left to right is 1 2 3 4 5.\
- The second row is 6 7 8 9 10. The third row follows the same pattern.\
- There are multiple ways to win: you can get 3 in a row (diagonals included) in the middle 3 by 3 board, \
- you can get four in a row along a diagonal, or you can get five in a row in any direction.\
- Both players will move at the same time. If both players move to the same spot, that location becomes bombed.\
- A bombed location is empty and cannot be moved to on the next turn. If both players win at the same time,\
- the squares they played on last, to win, both become bombed. Bombed locations\
- remain bombed until a move occurs that doesn't result in bombing. When both players win simultaneously,\
- the exterior pieces (those around the middle 3 by 3 board) rotate one square clockwise.\
- One final catch - if neither player is able to move (if the board is full or bombed-out),\
- all of the pieces in the middle 3 by 3 board will disappear.")
 
-player_x = input("Player x, enter your name: ")
+player_x = input("Player X, enter your name: ")
 print("Welcome, " + player_x)
 
-player_o = input("Player o, please enter your name: ")
+player_o = input("Player O, please enter your name: ")
 print("Welcome, " + player_o)
 
-x_2move_count = 4
-o_2move_count = 4
+
+
+board = {1 : "   ", 2 : "   ", 3 : "   ", 4 : "   ", 5 : "   ",\
+	 6 : "   ", 7 : "   ", 8 : "   ", 9 : "   ", 10 : "   ",\
+	 11 : "   ", 12 : "   ", 13 : "   ", 14 : "   ", 15 : "   ",\
+	 16 : "   ", 17 : "   ", 18 : "   ", 19 : "   ", 20 : "   ",\
+	 21 : "   ", 22 : "   ", 23 : "   ", 24 : "   ", 25 : "   "}
+
+
+
+def print_board():
+	print("  - + - + - + - + - +")
+	print("|" + board[1] + "|" + board[2] + "|" + board[3] + "|" + board[4] + "|" + board[5] + "|")
+	print("  - + - + - + - + - +")
+	print("|" + board[6] + "|" + board[7] + "|" + board[8] + "|" + board[9] + "|" + board[10] + "|")
+	print("  - + - + - + - + - +")
+	print("|" + board[11] + "|" + board[12] + "|" + board[13] + "|" + board[14] + "|" + board[15] + "|")
+	print("  - + - + - + - + - +")
+	print("|" + board[16] + "|" + board[17] + "|" + board[18] + "|" + board[19] + "|" + board[20] + "|")
+	print("  - + - + - + - + - +")
+	print("|" + board[21] + "|" + board[22] + "|" + board[23] + "|" + board[24] + "|" + board[25] + "|")
+	print("  - + - + - + - + - +")
+
+
+print_board()
+
 
 def get_x_move():
 	try:
-		x_move = int(input(player_x + ", enter your move: "))
+		x_move = int(input(player_x + ", please enter your move: "))
 		if not(x_move in range(1, 26)):
 			print("Invalid move.")
-			get_x_move()
+			return 0
+		elif board[x_move] == " B ":
+			print("Square is bombed out - please select another square.")
+			return 0
+		elif (board[x_move] == " X ") or (board[x_move] == " O "):
+			print("Square is already occupied - please select another square.") 
+			return 0
 		else:
 			return x_move
 	except:
 		print("Invalid move.")
-		get_x_move()
+		return 0
+			
 	
 
 def get_o_move():
 	try:
-		o_move = int(input(player_o + ", enter your move: "))
+		o_move = int(input(player_o + ", please enter your move: "))
 		if not(o_move in range(1, 26)):
 			print("Invalid move.")
+			return 0
+		elif board[o_move] == " B ":
+			print("Square is bombed out - please select another square.")
+			return 0
+		elif (board[o_move] == " X ") or (board[o_move] == " O "):
+			print("Square is already occupied - please select another square.") 
+			return 0
 		else:
 			return o_move
 	except:
 		print("Invalid move.")
+		return 0
 
 
-get_x_move()
+
+
+def board_update(x_move, o_move):
+	if x_move == o_move:
+		board[x_move] = " B "
+		square1 = board[1]
+		for i in range(1, 17, 5):
+			board[i] = board[i + 5]
+		for i in range(21, 25):
+			board[i] = board[i + 1]
+		for i in range(25, 9, -5):
+			board[i] = board[i - 5]
+		for i in range(5, 2, -1):
+			board[i] = board[i - 1]
+		board[2] = square1
+		return True
+	else:
+		board[x_move] = " X "
+		board[o_move] = " O "
+
+def check_for_winner():
+	winner = ""
+	winner_count = 0
+	if (board[7] == board[8] == board[9] == " X ") or (board[12] == board[13] == board[14] == " X ") or (board[17] == board[18] == board[19] == " X ")\
+	 or (board[7] == board[12] == board[17] == " X ") or (board[8] == board[13] == board[18] == " X ") or (board[9] == board[14] == board[19] == " X ")\
+	 or (board[7] == board[13] == board[19] == " X ") or (board[9] == board[13] == board[17] == " X ") or (board[2] == board[8] == board[14] == board[20] == " X ")\
+	 or (board[6] == board[12] == board[18] == board[24] == " X ") or (board[4] == board[8] == board[12] == board[16] == " X ") or (board[10] == board[14] == board[18] == board[22] == " X ")\
+	 or (board[1] == board[2] == board[3] == board[4] == board[5] == " X ") or (board[1] == board[6] == board[11] == board[16] == board[21] == " X ")\
+	 or (board[5] == board[10] == board[15] == board[20] == board[25] == " X ") or (board[21] == board[22] == board[23] == board[24] == board[25] == " X "):
+		winner += player_x
+		winner_count += 1
+	if (board[7] == board[8] == board[9] == " O ") or (board[12] == board[13] == board[14] == " O ") or (board[17] == board[18] == board[19] == " O ")\
+	 or (board[7] == board[12] == board[17] == " O ") or (board[8] == board[13] == board[18] == " O ") or (board[9] == board[14] == board[19] == " O ")\
+	 or (board[7] == board[13] == board[19] == " O ") or (board[9] == board[13] == board[17] == " X ") or (board[2] == board[8] == board[14] == board[20] == " X ")\
+	 or (board[6] == board[12] == board[18] == board[24] == " O ") or (board[4] == board[8] == board[12] == board[16] == " O ") or (board[10] == board[14] == board[18] == board[22] == " O ")\
+	 or (board[1] == board[2] == board[3] == board[4] == board[5] == " O ") or (board[1] == board[6] == board[11] == board[16] == board[21] == " O ")\
+	 or (board[5] == board[10] == board[15] == board[20] == board[25] == " O ") or (board[21] == board[22] == board[23] == board[24] == board[25] == " O "):
+		winner += player_o
+		winner_count += 1
+	if winner_count == 1:
+		print(winner + " has won the game.")
+		return winner_count
+	else: 
+		return winner_count
+		
+
+
+def full_board():
+	if list(board.values()).count("   ") == 0:
+		for i in (7, 8, 9, 12, 13, 14, 17, 18, 19):
+			board[i] = "   "
 
 
 
-board = {1 : "-", 2 : "-", 3 : "-", 4 : "-", 5 : " - ",\
-	 6 : "-", 7 : "-", 8 : "-", 9 : "-", 10 : " - ",\
-	 11 : "-", 12 : "-", 13 : "-", 14 : "-", 15 : " - ",\
-	 16 : "-", 17 : "-", 18 : "-", 19 : "-", 20 : " - ",\
-	 21 : "-", 22 : "-", 23 : "-", 24 : "-", 25 : " - "}
+def play_a_game():
+	game_done = False
+	while game_done == False:
+		x_move = 0
+		while x_move == 0:
+			x_move += get_x_move()
+		o_move = 0
+		while o_move == 0:
+			o_move += get_o_move()
+		bomb_test = board_update(x_move, o_move)
+		win_check = check_for_winner()
+		if win_check == 1:
+			game_done = True
+		if win_check == 2: 
+			board[x_move] = " B "
+			board[o_move] = " B "
+			full_board()
+		if not(bomb_test or (win_check == 1) or (win_check == 2)):
+			for i, j in board.items():
+				if j == " B ":
+					board[i] = "   "
+			full_board()
+		print_board()
+	
+play_a_game()
+
+
+	
+		
+		
+	
 
 
 	
 
 
 
-	
+
